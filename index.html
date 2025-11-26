@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LLM Model Cost Overview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="hero__content">
+      <p class="eyebrow">Cost Explorer</p>
+      <h1>Token pricing at a glance</h1>
+      <p class="lede">Compare prompt and output costs across popular coding-focused LLMs. Adjust the sliders to estimate per-request spend for your workflow.</p>
+      <div class="hero__badges">
+        <span class="badge">Updated: 2024</span>
+        <span class="badge badge--ghost">Values per 1M tokens (USD)</span>
+      </div>
+    </div>
+    <div class="hero__glow" aria-hidden="true"></div>
+  </header>
+
+  <main>
+    <section class="grid" aria-label="Model pricing cards">
+      <article class="card" data-model="gpt-5-1-codex">
+        <div class="card__header">
+          <p class="card__eyebrow">Premium reasoning</p>
+          <h2>GPT 5.1 Codex</h2>
+        </div>
+        <div class="card__prices">
+          <div>
+            <p>Prompt</p>
+            <strong>$1.00–$5.00</strong>
+          </div>
+          <div>
+            <p>Output</p>
+            <strong>$2.00–$10.00</strong>
+          </div>
+        </div>
+        <ul class="card__bullets">
+          <li>Strong code reasoning and debugging</li>
+          <li>Watch prompt spend on large contexts</li>
+          <li>Good for synthesis and complex refactors</li>
+        </ul>
+      </article>
+
+      <article class="card" data-model="claude-sonnet-4-5">
+        <div class="card__header">
+          <p class="card__eyebrow">Balanced choice</p>
+          <h2>Claude Sonnet 4.5</h2>
+        </div>
+        <div class="card__prices">
+          <div>
+            <p>Prompt</p>
+            <strong>$3.00</strong>
+          </div>
+          <div>
+            <p>Output</p>
+            <strong>$15.00</strong>
+          </div>
+        </div>
+        <ul class="card__bullets">
+          <li>Solid quality vs. cost trade-off</li>
+          <li>Dependable for review/fix tasks</li>
+          <li>Handles structured prompts well</li>
+        </ul>
+      </article>
+
+      <article class="card" data-model="claude-opus-4-5">
+        <div class="card__header">
+          <p class="card__eyebrow">Flagship</p>
+          <h2>Claude Opus 4.5</h2>
+        </div>
+        <div class="card__prices">
+          <div>
+            <p>Prompt</p>
+            <strong>$15.00</strong>
+          </div>
+          <div>
+            <p>Output</p>
+            <strong>$75.00</strong>
+          </div>
+        </div>
+        <ul class="card__bullets">
+          <li>Use for toughest debugging or design</li>
+          <li>Higher latency and premium pricing</li>
+          <li>Best reserved for critical calls</li>
+        </ul>
+      </article>
+
+      <article class="card" data-model="gemini-3-pro">
+        <div class="card__header">
+          <p class="card__eyebrow">Cost-efficient</p>
+          <h2>Gemini 3.0 Pro</h2>
+        </div>
+        <div class="card__prices">
+          <div>
+            <p>Prompt</p>
+            <strong>$0.50</strong>
+          </div>
+          <div>
+            <p>Output</p>
+            <strong>$1.50</strong>
+          </div>
+        </div>
+        <ul class="card__bullets">
+          <li>Great for autocomplete and linting</li>
+          <li>Low cost for high-volume usage</li>
+          <li>Fast responses for iterative edits</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="calculator" aria-label="Cost calculator">
+      <div class="calculator__header">
+        <div>
+          <p class="eyebrow">Scenario explorer</p>
+          <h3>Estimate per-request spend</h3>
+          <p class="hint">Move the sliders to size your prompt and completion tokens. Costs update instantly.</p>
+        </div>
+        <div class="pill">Token inputs</div>
+      </div>
+
+      <div class="inputs">
+        <label class="slider">
+          <div class="slider__label">
+            <span>Prompt tokens</span>
+            <span id="promptValue">5,000</span>
+          </div>
+          <div class="slider__control">
+            <input type="range" min="500" max="200000" value="5000" step="500" id="promptSlider">
+            <input type="number" min="0" value="5000" step="500" id="promptInput" aria-label="Prompt token count">
+          </div>
+          <p class="slider__hint">Type a custom count to extend the range automatically.</p>
+        </label>
+        <label class="slider">
+          <div class="slider__label">
+            <span>Output tokens</span>
+            <span id="outputValue">1,000</span>
+          </div>
+          <div class="slider__control">
+            <input type="range" min="100" max="80000" value="1000" step="100" id="outputSlider">
+            <input type="number" min="0" value="1000" step="100" id="outputInput" aria-label="Output token count">
+          </div>
+          <p class="slider__hint">Useful for long-form generation or multiple samples.</p>
+        </label>
+      </div>
+
+      <div class="table" role="grid" aria-label="Cost comparison table">
+        <div class="table__header">
+          <span>Model</span>
+          <span>Prompt cost</span>
+          <span>Output cost</span>
+          <span>Total</span>
+        </div>
+        <div id="tableRows" class="table__body"></div>
+      </div>
+      <p class="footnote">Calculations use midpoint pricing where ranges are provided and assume USD per 1M tokens.</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Tip: cache shared context, deduplicate prompts, and cap completion length to control spend.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
